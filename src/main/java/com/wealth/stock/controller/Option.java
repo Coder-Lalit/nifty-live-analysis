@@ -29,6 +29,7 @@ public class Option {
     public void getOption() {
         LocalDateTime now = LocalDateTime.now();
         now.atOffset(ZoneOffset.ofHoursMinutes(5,30));
+        System.out.println(now);
         if (now.getHour() >= 9 && now.getHour() < 16) {
             if(now.getHour()==9 && now.getMinute()<=14){
                 System.out.println("Not Now");
