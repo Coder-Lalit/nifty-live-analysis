@@ -41,6 +41,8 @@ public class Option {
                         .when()
                         .get(BaseURI)
                         .then()
+                        .log()
+                        .all()
                         .statusCode(200)
                         .extract()
                         .as(Data.class);
