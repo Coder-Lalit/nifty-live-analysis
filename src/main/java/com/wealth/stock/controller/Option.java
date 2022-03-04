@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.*;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
 
@@ -26,15 +28,10 @@ public class Option {
 
     @Scheduled(fixedDelay = 60000)
     public void getOption() {
-        ZonedDateTime instant = ZonedDateTime.now();
-        System.out.println(instant);
-        ZonedDateTime iInIST = instant.withZoneSameInstant(ZoneId.of("IST"));
-        System.out.println(iInIST);
-        
-        if (iInIST.getHour() >= 9 && iInIST.getHour() < 16) {
-            if(iInIST.getHour()==9 && iInIST.getMinute()<=14){
-                System.out.println("Not Now");
-            }else if(iInIST.getHour()==15 && iInIST.getMinute()>=31){
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println(now);
+        if (now.getHour() >= 3 && now.getHour() < 10) {
+            if(now.getHour()==3 && now.getMinute()<=46){
                 System.out.println("Not Now");
             }else{
                 Data as = given().log().all()
@@ -47,7 +44,7 @@ public class Option {
                         .statusCode(200)
                         .extract()
                         .as(Data.class);
-                Date myTimeStamp=new Date(iInIST.getYear(),iInIST.getDayOfMonth(),iInIST.getDayOfYear(),iInIST.getHour(),iInIST.getMinute(),iInIST.getSecond());
+                Date myTimeStamp = (new Date());
                 as.filtered.data.forEach(datum -> {
                     datum.timeStamp = myTimeStamp;
                     dailyDataRepository.save(datum);
