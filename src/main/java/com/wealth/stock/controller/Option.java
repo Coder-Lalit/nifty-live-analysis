@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
@@ -28,12 +29,12 @@ public class Option {
     @Scheduled(fixedDelay = 60000)
     public void getOption() {
         LocalDateTime now = LocalDateTime.now();
-        now.atOffset(ZoneOffset.ofHoursMinutes(5,30));
-        System.out.println(now);
-        if (now.getHour() >= 9 && now.getHour() < 16) {
-            if(now.getHour()==9 && now.getMinute()<=14){
+        OffsetDateTime offsetDT = now.atOffset(ZoneOffset.ofHoursMinutes(5, 30));
+        System.out.println(offsetDT);
+        if (offsetDT.getHour() >= 9 && offsetDT.getHour() < 16) {
+            if(offsetDT.getHour()==9 && offsetDT.getMinute()<=14){
                 System.out.println("Not Now");
-            }else if(now.getHour()==15 && now.getMinute()>=31){
+            }else if(offsetDT.getHour()==15 && offsetDT.getMinute()>=31){
                 System.out.println("Not Now");
             }else{
                 Data as = given().log().all()
@@ -46,7 +47,7 @@ public class Option {
                         .statusCode(200)
                         .extract()
                         .as(Data.class);
-                Date myTimeStamp = (new Date());
+                Date myTimeStamp=new Date(offsetDT.getYear(),offsetDT.getDayOfMonth(),offsetDT.getDayOfYear(),offsetDT.getHour(),offsetDT.getMinute(),offsetDT.getSecond());
                 as.filtered.data.forEach(datum -> {
                     datum.timeStamp = myTimeStamp;
                     dailyDataRepository.save(datum);
