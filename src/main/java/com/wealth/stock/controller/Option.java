@@ -46,6 +46,7 @@ public class Option {
                         .as(Data.class);
                 Date myTimeStamp = (new Date());
                 as.filtered.data.forEach(datum -> {
+                    System.out.println(datum);
                     datum.timeStamp = myTimeStamp;
                     dailyDataRepository.save(datum);
                 });
