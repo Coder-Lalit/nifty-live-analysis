@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class Option {
     @Scheduled(fixedDelay = 60000)
     public void getOption() {
         LocalDateTime now = LocalDateTime.now();
+        now.atOffset(ZoneOffset.ofHoursMinutes(5,30));
         if (now.getHour() >= 9 && now.getHour() < 16) {
             if(now.getHour()==9 && now.getMinute()<=14){
                 System.out.println("Not Now");
