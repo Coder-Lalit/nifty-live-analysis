@@ -59,4 +59,14 @@ public class webApiController {
         model.addAttribute("pEPrice",pEPrice);
         return "basicLine";
     }
+
+    @GetMapping("/")
+    public String homePage(){
+        return "index";
+    }
+
+    @GetMapping("/error")
+    public String errorPage(){
+        return "error";
+    }
 }
