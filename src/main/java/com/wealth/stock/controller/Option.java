@@ -30,8 +30,10 @@ public class Option {
     public void getOption() {
         LocalDateTime now = LocalDateTime.now();
         System.out.println(now);
-        if (now.getHour() >= 3 && now.getHour() < 10) {
-            if(now.getHour()==3 && now.getMinute()<=46){
+        if (now.getHour() >= 9 && now.getHour() < 16) {
+            if(now.getHour()==9 && now.getMinute()<=14){
+                System.out.println("Not Now");
+            }else if(now.getHour()==15 && now.getMinute()>=31){
                 System.out.println("Not Now");
             }else{
                 Data as = given().log().all()
@@ -48,7 +50,6 @@ public class Option {
                         .as(Data.class);
                 Date myTimeStamp = (new Date());
                 as.filtered.data.forEach(datum -> {
-                    System.out.println(datum);
                     datum.timeStamp = myTimeStamp;
                     dailyDataRepository.save(datum);
                 });
