@@ -1,7 +1,5 @@
 package com.wealth.stock.repository.impl;
 
-import com.wealth.stock.bean.OCData;
-import com.wealth.stock.bean.Option;
 import com.wealth.stock.bean.OptionChain;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.Aggregation;
@@ -24,6 +22,7 @@ public interface OptionChainRepository extends MongoRepository<OptionChain, Stri
 
     @Aggregation(pipeline = { "{$group: { _id: '', total: {$min: $strikePrice}}}"})
     public int min();
+
 
 
 
