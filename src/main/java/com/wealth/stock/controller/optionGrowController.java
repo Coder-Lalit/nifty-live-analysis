@@ -33,6 +33,7 @@ public class optionGrowController {
     @Scheduled(fixedDelay = 60000)
     public void getOptionDataFromGrow() {
         LocalDateTime dateTime = LocalDateTime.now();
+        System.out.println(new Date());
         ZonedDateTime istTime = dateTime.atZone(ZoneId.of("Asia/Kolkata"));
         System.out.println(istTime.getHour()+" : "+istTime.getMinute());
         if ((istTime.getHour() >= 9 && istTime.getHour() < 16) && (istTime.getDayOfWeek().getValue() < 6)) {
