@@ -61,7 +61,7 @@ public class optionGrowController {
                 });
                 Future future = new Future();
                 future.livePrice = as.livePrice;
-                future.livePrice.ltp=future.livePrice.value;
+                future.livePrice.ltp=as.livePrice.value;
                 future.contract = "Nifty";
                 future.expiry = "NA";
                 as.futures.add(future);
