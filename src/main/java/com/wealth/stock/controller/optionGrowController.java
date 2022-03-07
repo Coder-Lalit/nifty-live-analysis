@@ -41,18 +41,18 @@ public class optionGrowController {
             } else if (istTime.getHour() == 15 && istTime.getMinute() >= 31) {
                 System.out.println("Not a valid time");
             } else {
-                NiftyData as = given().log().all()
+                System.out.println("Requesting the service for Data");
+                NiftyData as = given()
                         .relaxedHTTPSValidation()
                         .accept("application/json")
                         .header("User-Agent", USER_AGENT)
                         .when()
                         .get(BaseURI_GROW)
                         .then()
-                        .log()
-                        .all()
                         .statusCode(200)
                         .extract()
                         .as(NiftyData.class);
+                System.out.println("Got the Data from Service");
                 Date date = new Date(istTime.getYear() - 1900, istTime.getMonthValue() - 1, istTime.getDayOfMonth()
                         , istTime.getHour(), istTime.getMinute(), istTime.getSecond());
                 as.optionChain.optionChains.forEach(optionChain -> {
