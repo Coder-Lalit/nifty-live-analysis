@@ -39,7 +39,7 @@ public class webGrowApiController {
         List<Double> cEPrice = new ArrayList<>();
         List<Double> pEPrice = new ArrayList<>();
         priceList.forEach(p->{
-            pcr.add((double) (p.putOption.openInterest/p.callOption.openInterest));
+            pcr.add(p.pcr);
             cEPrice.add(p.callOption.ltp);
             pEPrice.add(p.putOption.ltp);
         });
