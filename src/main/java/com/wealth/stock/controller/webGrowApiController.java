@@ -34,7 +34,8 @@ public class webGrowApiController {
 
     @GetMapping("/{price}")
     public String indexPage(Model model, @PathVariable int price){
-        List<OptionChain> priceList = optionChainRepository.findByStrikePrice(price*100);
+        List<OptionChain> priceList = optionChainRepository
+                .findByStrikePrice(price*100,PageRequest.of(0, 120, Sort.by(Sort.Direction.DESC, "timeStamp")));
         List<Double> pcr = new ArrayList<>();
         List<Double> cEPrice = new ArrayList<>();
         List<Double> pEPrice = new ArrayList<>();
