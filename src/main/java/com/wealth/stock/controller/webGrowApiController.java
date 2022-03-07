@@ -63,7 +63,7 @@ public class webGrowApiController {
 
     @GetMapping("/")
     public String homePage(Model model){
-        Futures nifty = (Futures) futuresRepository.findAll(Pageable.ofSize(1)).getContent().get(0);
+        Futures nifty = (Futures) futuresRepository.findAll(PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "timeStamp"))).getContent().get(0);
         int ltp = (int) nifty.futureArrayList.stream()
                 .filter(future -> future.contract.equalsIgnoreCase("nifty"))
                 .findFirst().get().livePrice.ltp;
