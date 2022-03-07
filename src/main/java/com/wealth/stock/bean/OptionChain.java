@@ -9,6 +9,7 @@ public class OptionChain implements Comparable<OptionChain>{
     public int strikePrice;
     public Price callOption;
     public Price putOption;
+    public double pcr;
     public Date timeStamp;
 
     public Date getTimeStamp() {
