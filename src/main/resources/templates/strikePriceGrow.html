@@ -158,7 +158,7 @@
                     <td th:text="${p.callOption.openInterest}">NA</td>
                     <td th:text="${p.putOption.openInterest-p.putOption.prevOpenInterest}">NA</td>
                     <td th:text="${p.callOption.openInterest-p.callOption.prevOpenInterest}">NA</td>
-                    <td th:text="${#numbers.formatDecimal(p.putOption.openInterest/p.callOption.openInterest, 0, 'DEFAULT', 2, 'DEFAULT')}">NA</td>
+                    <td th:text="${#numbers.formatDecimal(p.putOption.openInterest/p.callOption.openInterest, 2,2)}">NA</td>
                     <td th:text="${p.putOption.openInterest/p.callOption.openInterest > 1.3 ? 'Buy CE' : p.putOption.openInterest/p.callOption.openInterest < 0.8 ? 'Buy PE' : 'Not Sure'}">NA</td>
                 </tr>
                 </tbody>
