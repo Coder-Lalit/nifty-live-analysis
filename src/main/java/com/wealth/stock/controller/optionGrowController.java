@@ -34,6 +34,7 @@ public class optionGrowController {
     public void getOptionDataFromGrow() {
         LocalDateTime dateTime = LocalDateTime.now();
         ZonedDateTime istTime = dateTime.atZone(ZoneId.of("Asia/Kolkata"));
+        System.out.println(istTime.getHour()+" : "+istTime.getMinute());
         if ((istTime.getHour() >= 9 && istTime.getHour() < 16) && (istTime.getDayOfWeek().getValue() < 6)) {
             if (istTime.getHour() == 9 && istTime.getMinute() <= 14) {
                 System.out.println("Not Now");
