@@ -39,24 +39,20 @@ public class webGrowApiController {
         List<Double> pcr = new ArrayList<>();
         List<Double> cEPrice = new ArrayList<>();
         List<Double> pEPrice = new ArrayList<>();
+        Collections.reverse(priceList);
         priceList.forEach(p->{
             pcr.add(p.pcr);
             cEPrice.add(p.callOption.ltp);
             pEPrice.add(p.putOption.ltp);
         });
         model.addAttribute("startTime",priceList.get(0).timeStamp);
+        Collections.reverse(priceList);
+        model.addAttribute("priceList",priceList);
         model.addAttribute("pcr",pcr);
         model.addAttribute("cEPrice",cEPrice);
         model.addAttribute("pEPrice",pEPrice);
         model.addAttribute("pMin",optionChainRepository.min());
         model.addAttribute("pMax",optionChainRepository.max());
-        Collections.sort(priceList, new Comparator<OptionChain>() {
-            @Override
-            public int compare(OptionChain o1, OptionChain o2) {
-                return o2.compareTo(o1);
-            }
-        });
-        model.addAttribute("priceList",priceList);
         model.addAttribute("price",price);
         model.addAttribute("NiftyList",futuresRepository.findAll(PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "timeStamp"))).getContent().get(0));
         return "strikePriceGrow";
