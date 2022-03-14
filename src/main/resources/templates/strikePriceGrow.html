@@ -216,8 +216,23 @@
 
             series: [
                 {
-                    name: 'PCR',
-                    data: [[${pcr}]]
+                    name: [[${price-100}]],
+                    data: [[${pcrMap.get(price-100)}]]
+                },
+                {
+                    name: [[${price-50}]],
+                    data: [[${pcrMap.get(price-50)}]]
+                },
+                {
+                    name: [[${price}]],
+                    data: [[${pcrMap.get(price)}]]
+                },
+                {
+                    name: [[${price+50}]],
+                    data: [[${pcrMap.get(price+50)}]]
+                },{
+                    name: [[${price+100}]],
+                    data: [[${pcrMap.get(price+100)}]]
                 }
             ]
         }

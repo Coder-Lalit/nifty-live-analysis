@@ -17,10 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @Profile("grow")
@@ -36,10 +33,21 @@ public class webGrowApiController {
     public String indexPage(Model model, @PathVariable int price){
         List<OptionChain> priceList = optionChainRepository
                 .findByStrikePrice(price*100,PageRequest.of(0, 120, Sort.by(Sort.Direction.DESC, "timeStamp")));
+        HashMap<Integer,List<Double>> map = new HashMap<>();
         List<Double> pcr = new ArrayList<>();
         List<Double> cEPrice = new ArrayList<>();
         List<Double> pEPrice = new ArrayList<>();
         Collections.reverse(priceList);
+        for(int i=0;i<5;i++){
+            List<OptionChain> priceList2 = optionChainRepository
+                    .findByStrikePrice(((price-100)+i*50)*100,PageRequest.of(0, 120, Sort.by(Sort.Direction.DESC, "timeStamp")));
+            Collections.reverse(priceList2);
+            List<Double> tempPcr = new ArrayList<>();
+            priceList2.forEach(p->{
+                tempPcr.add(p.pcr);
+            });
+            map.put((price-100)+i*50,tempPcr);
+        }
         priceList.forEach(p->{
             pcr.add(p.pcr);
             cEPrice.add(p.callOption.ltp);
@@ -49,6 +57,7 @@ public class webGrowApiController {
         Collections.reverse(priceList);
         model.addAttribute("priceList",priceList);
         model.addAttribute("pcr",pcr);
+        model.addAttribute("pcrMap",map);
         model.addAttribute("cEPrice",cEPrice);
         model.addAttribute("pEPrice",pEPrice);
         model.addAttribute("pMin",optionChainRepository.min());
