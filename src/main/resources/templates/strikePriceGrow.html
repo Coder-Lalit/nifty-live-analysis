@@ -114,7 +114,7 @@
           location.replace(new URL(window.location.href).origin+'/'+x);
         }
     </script>
-    <title>Live Analysis</title>
+    <title th:text="${NiftyList.futureArrayList.get(3).livePrice.ltp}"></title>
 </head>
 <body onload = "JavaScript:AutoRefresh(30000);">
 
