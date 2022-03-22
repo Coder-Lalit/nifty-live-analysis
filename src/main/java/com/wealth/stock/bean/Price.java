@@ -15,7 +15,7 @@ public class Price {
     public double dayChangePerc;
     public double lowPriceRange;
     public double highPriceRange;
-    public int volume;
+    public long volume;
     public double totalBuyQty;
     public double totalSellQty;
     public int openInterest;
