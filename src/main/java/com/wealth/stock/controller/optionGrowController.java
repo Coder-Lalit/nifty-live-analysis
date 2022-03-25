@@ -58,7 +58,7 @@ public class optionGrowController {
                         , istTime.getHour(), istTime.getMinute(), istTime.getSecond());
                 as.optionChain.optionChains.forEach(optionChain -> {
                     optionChain.timeStamp = date;
-                    if (optionChain.putOption != null || optionChain.callOption != null)
+                    if (optionChain.putOption != null && optionChain.callOption != null)
                         optionChain.pcr = (double) optionChain.putOption.openInterest / optionChain.callOption.openInterest;
                     optionChainRepository.save(optionChain);
                 });
