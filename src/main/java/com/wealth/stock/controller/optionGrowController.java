@@ -35,7 +35,7 @@ public class optionGrowController {
         LocalDateTime dateTime = LocalDateTime.now();
         System.out.println(new Date());
         ZonedDateTime istTime = dateTime.atZone(ZoneId.of("Asia/Kolkata"));
-        System.out.println(istTime.getHour()+" : "+istTime.getMinute());
+        System.out.println(istTime.getHour() + " : " + istTime.getMinute());
         if ((istTime.getHour() >= 9 && istTime.getHour() < 16) && (istTime.getDayOfWeek().getValue() < 6)) {
             if (istTime.getHour() == 9 && istTime.getMinute() <= 14) {
                 System.out.println("Not Now");
@@ -58,12 +58,13 @@ public class optionGrowController {
                         , istTime.getHour(), istTime.getMinute(), istTime.getSecond());
                 as.optionChain.optionChains.forEach(optionChain -> {
                     optionChain.timeStamp = date;
-                    optionChain.pcr=(double) optionChain.putOption.openInterest/optionChain.callOption.openInterest;
+                    if (optionChain.putOption != null || optionChain.callOption != null)
+                        optionChain.pcr = (double) optionChain.putOption.openInterest / optionChain.callOption.openInterest;
                     optionChainRepository.save(optionChain);
                 });
                 Future future = new Future();
                 future.livePrice = as.livePrice;
-                future.livePrice.ltp=as.livePrice.value;
+                future.livePrice.ltp = as.livePrice.value;
                 future.contract = "Nifty";
                 future.expiry = "NA";
                 as.futures.add(future);
