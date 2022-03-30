@@ -73,8 +73,8 @@ public class webGrowApiController {
         int ltp = (int) nifty.futureArrayList.stream()
                 .filter(future -> future.contract.equalsIgnoreCase("nifty"))
                 .findFirst().get().livePrice.ltp;
-        ltp/=100;
-        ltp = ltp%10 > 5 ?ltp*100+50:ltp*100;
+        ltp/=10;
+        ltp = ltp%10 >= 5 ?(ltp/10)*100+50:(ltp/10)*100;
         return indexPage(model,ltp);
     }
 
