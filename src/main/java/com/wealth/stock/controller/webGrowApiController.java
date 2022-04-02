@@ -1,23 +1,22 @@
 package com.wealth.stock.controller;
 
 import com.wealth.stock.bean.Futures;
-import com.wealth.stock.bean.OCData;
 import com.wealth.stock.bean.OptionChain;
-import com.wealth.stock.bean.OptionData;
-import com.wealth.stock.repository.impl.DailyDataRepository;
 import com.wealth.stock.repository.impl.FuturesRepository;
 import com.wealth.stock.repository.impl.OptionChainRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 @Controller
 @Profile("grow")
@@ -48,6 +47,16 @@ public class webGrowApiController {
             });
             map.put((price-100)+i*50,tempPcr);
         }
+
+        //
+        List<Futures> futuresList = futuresRepository.findAll2(PageRequest.of(0, 120, Sort.by(Sort.Direction.DESC, "timeStamp")));
+        Collections.reverse(futuresList);
+        List<Double> tempPcr = new ArrayList<>();
+        futuresList.forEach(p->{
+            tempPcr.add(p.pcr);
+        });
+        map.put(0,tempPcr);
+
         priceList.forEach(p->{
             pcr.add(p.pcr);
             cEPrice.add(p.callOption.ltp);

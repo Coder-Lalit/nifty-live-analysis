@@ -62,6 +62,13 @@ public class optionGrowController {
                         optionChain.pcr = (double) optionChain.putOption.openInterest / optionChain.callOption.openInterest;
                     optionChainRepository.save(optionChain);
                 });
+                int sumOfPE_OI = as.optionChain.optionChains.stream()
+                        .filter(x -> (x.putOption!=null && x.callOption!=null))
+                        .mapToInt(i -> i.putOption.openInterest).sum();
+                int sumOfCE_OI = as.optionChain.optionChains.stream()
+                        .filter(x -> (x.putOption!=null && x.callOption!=null))
+                        .mapToInt(i -> i.callOption.openInterest).sum();
+
                 Future future = new Future();
                 future.livePrice = as.livePrice;
                 future.livePrice.ltp = as.livePrice.value;
@@ -69,6 +76,8 @@ public class optionGrowController {
                 future.expiry = "NA";
                 as.futures.add(future);
                 Futures temp = new Futures(date, as.futures);
+                temp.currentPrice=future.livePrice.value;
+                temp.pcr = sumOfPE_OI/sumOfCE_OI;
                 futuresRepository.save(temp);
                 System.out.println("Pushed to mongoDB at :" + istTime);
             }
