@@ -48,10 +48,6 @@ public class webGrowApiController {
             map.put((price-100)+i*50,tempPcr);
         }
 
-        //
-        List<Futures> futuresList = futuresRepository.findAll2(PageRequest.of(0, 120, Sort.by(Sort.Direction.DESC, "timeStamp")));
-        Collections.reverse(futuresList);
-
         priceList.forEach(p->{
             pcr.add(p.pcr);
             cEPrice.add(p.callOption.ltp);
@@ -68,7 +64,7 @@ public class webGrowApiController {
         model.addAttribute("pMax",optionChainRepository.max());
         model.addAttribute("price",price);
         model.addAttribute("NiftyList",futuresRepository.findAll(PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "timeStamp"))).getContent().get(0));
-        model.addAttribute("NiftyPCR",futuresList);
+        model.addAttribute("NiftyPCR",futuresRepository.findAll2(PageRequest.of(0, 120, Sort.by(Sort.Direction.DESC, "timeStamp"))));
         return "strikePriceGrow";
     }
 
