@@ -79,6 +79,7 @@ public class optionGrowController {
                 temp.currentPrice=future.livePrice.value;
                 temp.pcr = sumOfPE_OI/sumOfCE_OI;
                 futuresRepository.save(temp);
+                System.out.println("Nifty current price :"+temp.currentPrice + " with pcr :"+temp.pcr );
                 System.out.println("Pushed to mongoDB at :" + istTime);
             }
         } else {
