@@ -10,6 +10,6 @@ import java.util.List;
 public interface FuturesRepository extends MongoRepository<Futures, String> {
     public long count();
 
-    @Query("{strikePrice:?0,callOption:{$ne:null},putOption:{$ne:null}}")
+    @Query("{}")
     List<Futures> findAll2(PageRequest pageRequest);
 }
