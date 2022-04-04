@@ -12,6 +12,8 @@ public class Futures {
     public Date timeStamp;
     public double pcr;
     public double currentPrice;
+    public int ceOI;
+    public int peOI;
     public ArrayList<Future> futureArrayList;
 
     public Futures(Date timeStamp, ArrayList<Future> futureArrayList) {

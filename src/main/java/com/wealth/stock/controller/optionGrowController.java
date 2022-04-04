@@ -77,6 +77,8 @@ public class optionGrowController {
                 as.futures.add(future);
                 Futures temp = new Futures(date, as.futures);
                 temp.currentPrice=future.livePrice.value;
+                temp.ceOI=sumOfCE_OI;
+                temp.peOI=sumOfPE_OI;
                 temp.pcr = (double) sumOfPE_OI/sumOfCE_OI;
                 futuresRepository.save(temp);
                 System.out.println("Nifty current price :"+temp.currentPrice + " with pcr :"+temp.pcr );
