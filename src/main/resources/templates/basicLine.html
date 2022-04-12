@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PCR</title>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <style>
+        #container {
+            height: 400px;
+        }
+    </style>
+
+</head>
+<body>
+    <div id="container"></div>
+    <script>
+        Highcharts.chart('container', {
+            xAxis: {
+                type: 'datetime'
+            },
+
+            plotOptions: {
+                series: {
+                    //pointStart:  Date.UTC(2010, 0, 1,9,15),
+                    pointStart:  Date.UTC([[${#dates.format(startTime, 'yyyy')}]], [[${#dates.format(startTime, 'MM')}]], [[${#dates.format(startTime, 'dd')}]],[[${#dates.format(startTime, 'HH')}]],[[${#dates.format(startTime, 'mm')}]]),
+                    pointInterval: 24 * 3600 // one day
+                }
+            },
+
+            series: [{
+                data: [[${pcr}]]
+            }]
+        }
+    );
+    </script>
+</body>
+</html>
