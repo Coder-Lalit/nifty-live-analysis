@@ -63,7 +63,7 @@
                 background-color: white;
             }
 
-            .wrapper > div > span {
+            .wrapper > div > span , .wrapper > div > div > span {
                 border: 2px solid red;
                 border-radius: 20px;
                 background-color: azure;
@@ -108,6 +108,17 @@
                 float: left;
             }
 
+            #table3 tbody td, #table3 thead th {
+                width: 44%;  /* 19% is less than (100% / 5 cols) = 20% */
+                float: left;
+            }
+
+            #table3 tbody {
+                height: 250px;
+                overflow-y: auto;
+                overflow-x: auto;
+            }
+
             table tr:nth-child(even){background-color: #f2f2f2;}
 
             table tr:hover {background-color: #ddd;}
@@ -146,7 +157,23 @@
     </div>
     <div class="wrapper">
         <div>
-            <div id="container1"></div>
+            <span>PCR for Different Price</span>
+            <div id="container1">
+                <table border="1" cellpadding="10" id="table3">
+                    <thead>
+                        <tr>
+                            <th>Price</th>
+                            <th>PCR</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="instance : ${pcrMap}">
+                            <td th:text="${instance.key}">keyvalue</td>
+                            <td th:text="${#numbers.formatDecimal(instance.value.get(instance.value.size()-1), 0,2)}">keyvalue</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <div id="container2"></div>
         </div>
         <div id="container3" align="center">
@@ -201,34 +228,6 @@
 
 
 <script>
-        Highcharts.chart('container1', {
-            title: {
-            text: 'PE vs CE'
-            },
-            xAxis: {
-                type: 'datetime'
-            },
-
-            plotOptions: {
-                series: {
-                    //pointStart:  Date.UTC(2010, 0, 1,9,15),
-                    pointStart:  Date.UTC([[${#dates.format(startTime, 'yyyy')}]], [[${#dates.month(startTime)-1}]], [[${#dates.format(startTime, 'dd')}]],[[${#dates.format(startTime, 'HH')}]],[[${#dates.format(startTime, 'mm')}]]),
-                    pointInterval: 24 * 3600 // one day
-                }
-            },
-
-            series: [
-                {
-                    name: 'CE',
-                    data: [[${cEPrice}]]
-                },
-                {
-                    name: 'PE',
-                    data: [[${pEPrice}]]
-                }
-            ]
-        }
-    );
 
     Highcharts.chart('container2', {
             title: {

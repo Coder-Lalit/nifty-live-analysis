@@ -13,10 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @Profile("grow")
@@ -32,20 +29,20 @@ public class webGrowApiController {
     public String indexPage(Model model, @PathVariable int price){
         List<OptionChain> priceList = optionChainRepository
                 .findByStrikePrice(price*100,PageRequest.of(0, 120, Sort.by(Sort.Direction.DESC, "timeStamp")));
-        HashMap<Integer,List<Double>> map = new HashMap<>();
+        SortedMap<Integer,List<Double>> map = new TreeMap<>();
         List<Double> pcr = new ArrayList<>();
         List<Double> cEPrice = new ArrayList<>();
         List<Double> pEPrice = new ArrayList<>();
         Collections.reverse(priceList);
-        for(int i=0;i<5;i++){
+        for(int i=0;i<7;i++){
             List<OptionChain> priceList2 = optionChainRepository
-                    .findByStrikePrice(((price-100)+i*50)*100,PageRequest.of(0, 120, Sort.by(Sort.Direction.DESC, "timeStamp")));
+                    .findByStrikePrice(((price-150)+i*50)*100,PageRequest.of(0, 120, Sort.by(Sort.Direction.DESC, "timeStamp")));
             Collections.reverse(priceList2);
             List<Double> tempPcr = new ArrayList<>();
             priceList2.forEach(p->{
                 tempPcr.add(p.pcr);
             });
-            map.put((price-100)+i*50,tempPcr);
+            map.put((price-150)+i*50,tempPcr);
         }
 
         priceList.forEach(p->{
