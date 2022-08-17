@@ -1,0 +1,95 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script>
+        function AutoRefresh( t ) {
+               setTimeout("location.reload(true);", t);
+        }
+    </script>
+</head>
+<body onload = "JavaScript:AutoRefresh(60000);">
+
+    <div id="container1"></div>
+
+<!--    <div th:if="${ not#lists.isEmpty(fiveMins)}">-->
+<!--        <table>-->
+<!--            <tr>-->
+<!--                <th>Time</th>-->
+<!--                <th>RSI</th>-->
+<!--            </tr>-->
+<!--            <tr th:each="r : ${fiveMins}">-->
+<!--                <td th:text="${#dates.format(r.timeStamp, 'dd-MM-yyyy HH:mm:ss')}">date</td>-->
+<!--                <td th:text="${r.rsi}">data</td>-->
+<!--            </tr>-->
+<!--        </table>-->
+<!--    </div>-->
+
+<!--    <div th:if="${ not#lists.isEmpty(fifteenMins)}">-->
+<!--        <table>-->
+<!--            <tr>-->
+<!--                <th>Time</th>-->
+<!--                <th>RSI</th>-->
+<!--            </tr>-->
+<!--            <tr th:each="r : ${fifteenMins}">-->
+<!--                <td th:text="${#dates.format(r.timeStamp, 'dd-MM-yyyy HH:mm:ss')}">date</td>-->
+<!--                <td th:text="${r.rsi}">data</td>-->
+<!--            </tr>-->
+<!--        </table>-->
+<!--    </div>-->
+
+<!--    <div th:if="${ not#lists.isEmpty(sixtyMins)}">-->
+<!--        <table>-->
+<!--            <tr>-->
+<!--                <th>Time</th>-->
+<!--                <th>RSI</th>-->
+<!--            </tr>-->
+<!--            <tr th:each="r : ${sixtyMins}">-->
+<!--                <td th:text="${#dates.format(r.timeStamp, 'dd-MM-yyyy HH:mm:ss')}">date</td>-->
+<!--                <td th:text="${r.rsi}">data</td>-->
+<!--            </tr>-->
+<!--        </table>-->
+<!--    </div>-->
+
+
+    <script>
+        Highcharts.chart('container1', {
+            chart: {
+                zoomType: 'x'
+            },
+            title: {
+                text: '3D RSI'
+            },
+            subtitle: {
+                text: document.ontouchstart === undefined ?
+                    'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+            },
+            xAxis: {
+                type: 'datetime'
+            },
+            yAxis: {
+                title: {
+                    text: 'RSI Range'
+                }
+            },
+            legend: {
+                enabled: true
+            },
+          series: [{
+            name: "5 Mins",
+            data: [[${fiveMins}]]
+          },
+          {
+            name: "15 Mins",
+            data: [[${fifteenMins}]]
+          },
+          {
+            name: "60 Mins",
+            data: [[${sixtyMins}]]
+          }
+          ],
+        });
+    </script>
+
+</body>
+</html>

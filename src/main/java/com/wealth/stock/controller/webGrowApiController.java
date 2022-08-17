@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @Profile("grow")
@@ -24,6 +25,9 @@ public class webGrowApiController {
 
     @Autowired
     private FuturesRepository futuresRepository;
+
+    @Autowired
+    private optionGrowController optionGrowController;
 
     @GetMapping("/{price}")
     public String indexPage(Model model, @PathVariable int price){
@@ -79,5 +83,20 @@ public class webGrowApiController {
     @GetMapping("/error")
     public String errorPage(Model model){
         return "error";
+    }
+
+    @GetMapping("/rsi")
+    public String getRSI(Model model){
+        int x=5;
+        List<List<Integer>> rsi5 = optionGrowController.getRSI("5");
+        List<List<Integer>> rsi15 = optionGrowController.getRSI("15");
+        List<List<Integer>> rsi60 = optionGrowController.getRSI("60");
+
+        model.addAttribute("fiveMins",rsi5.stream().skip(rsi5.size()-x*12).collect(Collectors.toList()));
+        model.addAttribute("fifteenMins",rsi15.stream().skip(rsi15.size()-x*4).collect(Collectors.toList()));
+        model.addAttribute("sixtyMins",rsi60.stream().skip(rsi60.size()-x).collect(Collectors.toList()));
+
+
+        return "rsi";
     }
 }
