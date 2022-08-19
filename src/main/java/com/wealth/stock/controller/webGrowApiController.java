@@ -85,12 +85,12 @@ public class webGrowApiController {
         return "error";
     }
 
-    @GetMapping("/rsi")
-    public String getRSI(Model model){
+    @GetMapping("/rsi/{stock}")
+    public String getRSI(Model model, @PathVariable String stock){
         int x=5;
-        List<List<Integer>> rsi5 = optionGrowController.getRSI("5");
-        List<List<Integer>> rsi15 = optionGrowController.getRSI("15");
-        List<List<Integer>> rsi60 = optionGrowController.getRSI("60");
+        List<List<Long>> rsi5 = optionGrowController.getRSI("5",stock);
+        List<List<Long>> rsi15 = optionGrowController.getRSI("15",stock);
+        List<List<Long>> rsi60 = optionGrowController.getRSI("60",stock);
 
         model.addAttribute("fiveMins",rsi5.stream().skip(rsi5.size()-x*12).collect(Collectors.toList()));
         model.addAttribute("fifteenMins",rsi15.stream().skip(rsi15.size()-x*4).collect(Collectors.toList()));
@@ -98,5 +98,24 @@ public class webGrowApiController {
 
 
         return "rsi";
+    }
+
+    @GetMapping("/rsi/3d/{stock}")
+    public String getRSI3D(Model model, @PathVariable String stock){
+        int x=5;
+        //1day Data
+        List<List<Long>> rsi1D = optionGrowController.getRSI3D("1440",stock);
+        //1Week Data
+        List<List<Long>> rsi2D = optionGrowController.getRSI3D("10080",stock);
+        //1Month Data
+        List<List<Long>> rsi3D = optionGrowController.getRSI3D("43800",stock);
+
+        model.addAttribute("D",rsi1D.stream().skip(rsi1D.size()-x*12).collect(Collectors.toList()));
+        model.addAttribute("W",rsi2D.stream().skip(rsi2D.size()-x*4).collect(Collectors.toList()));
+        model.addAttribute("M",rsi3D.stream().skip(rsi3D.size()-x).collect(Collectors.toList()));
+
+       // model.addAttribute("sNames",optionGrowController.getNSEScriptName());
+
+        return "rsi3D";
     }
 }

@@ -2,6 +2,7 @@ package com.wealth.stock.controller;
 
 import com.wealth.stock.bean.*;
 import com.wealth.stock.controller.Indicator.RSI;
+import com.wealth.stock.repository.impl.DailyRsiDataRepository;
 import com.wealth.stock.repository.impl.FuturesRepository;
 import com.wealth.stock.repository.impl.OptionChainRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +28,18 @@ import static io.restassured.RestAssured.given;
 public class optionGrowController {
     final String BaseURI_GROW = "https://groww.in/v1/api/option_chain_service/v1/option_chain/derivatives/nifty";
 
-    final String GET_HISTORICAL_DATA ="https://groww.in/v1/api/charting_service/v2/chart/exchange/NSE/segment/CASH/NIFTY?endTimeInMillis=%s&intervalInMinutes=%s&startTimeInMillis=%s";
+    final String GET_HISTORICAL_DATA ="https://groww.in/v1/api/charting_service/v2/chart/exchange/NSE/segment/CASH/%s?endTimeInMillis=%s&intervalInMinutes=%s&startTimeInMillis=%s";
     final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36";
 
+    final String ALL_STOCK ="https://groww.in/v1/api/stocks_data/v1/all_stocks";
     @Autowired
     private OptionChainRepository optionChainRepository;
 
     @Autowired
     private FuturesRepository futuresRepository;
+
+    @Autowired
+    private DailyRsiDataRepository dailyRsiDataRepository;
 
     @Autowired
     private RSI rsi;
@@ -106,17 +111,16 @@ public class optionGrowController {
     @GetMapping("/api/count")
     public long getCount() {
         return optionChainRepository.count();
-
     }
 
-    @GetMapping("/rsi/{mins}")
-    public List<List<Integer>> getRSI(@PathVariable String mins){
+    @GetMapping("/rsi/{mins}/{stock}")
+    public List<List<Long>> getRSI(@PathVariable String mins, @PathVariable String stock){
         ArrayList<List<Number>>  as = given()
                 .relaxedHTTPSValidation()
                 .accept("application/json")
                 .header("User-Agent", USER_AGENT)
                 .when()
-                .get(String.format(GET_HISTORICAL_DATA, Instant.now().getEpochSecond()*1000,mins, Instant.now().getEpochSecond()*1000-2592000000L))
+                .get(String.format(GET_HISTORICAL_DATA,stock,Instant.now().getEpochSecond()*1000,mins, Instant.now().getEpochSecond()*1000-2592000000L))
                 .then()
                 .statusCode(200)
                 .extract()
@@ -125,7 +129,7 @@ public class optionGrowController {
 
         List<Candlestick> candlestickList = as.stream().map(a ->
                 Candlestick.builder()
-                        .openTime((Integer) a.get(0))
+                        .openTime(((Integer) a.get(0)) * 1000L )
                         .open((Float) a.get(1))
                         .close((Float) a.get(4))
                         .build()
@@ -134,8 +138,83 @@ public class optionGrowController {
         for(int i =0; i<candlestickList.size();i++)
             candlesticks[i]=candlestickList.get(i);
         return rsi.calculateRSIValues(candlesticks, 14);
-
-
-
     }
+
+    public List<List<Long>> getRSI3D(@PathVariable String mins, @PathVariable String stock){
+        ArrayList<List<Number>>  as = given()
+                .relaxedHTTPSValidation()
+                .accept("application/json")
+                .header("User-Agent", USER_AGENT)
+                .when()
+                .get(String.format(GET_HISTORICAL_DATA,stock,Instant.now().getEpochSecond()*1000,mins, Instant.now().getEpochSecond()*1000-157766400000L))
+                .then()
+                .statusCode(200)
+                .extract()
+                .response()
+                .path("candles");
+
+        List<Candlestick> candlestickList = as.stream().map(a ->
+                Candlestick.builder()
+                        .openTime(((Integer) a.get(0)) *1000L)
+                        .open((Float) a.get(1))
+                        .close((Float) a.get(4))
+                        .build()
+        ).collect(Collectors.toList());
+        Candlestick[] candlesticks = new Candlestick[candlestickList.size()];
+        for(int i =0; i<candlestickList.size();i++)
+            candlesticks[i]=candlestickList.get(i);
+        return rsi.calculateRSIValues(candlesticks, 14);
+    }
+
+    public List<String> getNSEScriptName(){
+        return given()
+                .relaxedHTTPSValidation()
+                .accept("application/json")
+                .contentType("application/json")
+                .header("User-Agent", USER_AGENT)
+                .when()
+                .body(
+                        Filter.builder()
+                                .listFilters(
+                                        ListFilters.builder()
+                                                .iNDUSTRY(new ArrayList<>())
+                                                .iNDEX(new ArrayList<String>(){{add("Nifty 100");}})
+                                                .build()
+                                )
+                                .sortBy("COMPANY_NAME")
+                                .sortType("ASC")
+                                .size("100")
+                                .build()
+
+                )
+                .post(ALL_STOCK)
+                .then()
+                .statusCode(200)
+                .extract()
+                .response()
+                .jsonPath()
+                .get("records.nseScriptCode");
+    }
+
+    @Scheduled(fixedDelay = 86400000)
+    public void store3DRSI(){
+        Date date = new Date();
+        getNSEScriptName().forEach(name->{
+            //1day Data
+            List<List<Long>> rsi1D = getRSI3D("1440",name);
+            //1Week Data
+            List<List<Long>> rsi2D = getRSI3D("10080",name);
+            //1Month Data
+            List<List<Long>> rsi3D = getRSI3D("43800",name);
+                dailyRsiDataRepository.save(NIFTY100RSI.builder()
+                        .timeStamp(date)
+                        .name(name)
+                        .rsiDay(rsi1D.get(rsi1D.size()-1).get(1))
+                        .rsiWeek(rsi2D.get(rsi2D.size()-1).get(1))
+                        .rsiMonth(rsi3D.get(rsi3D.size()-1).get(1))
+                        .build()
+                );
+        });
+    }
+
 }

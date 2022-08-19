@@ -53,21 +53,21 @@ public class RSI {
 
     }
 
-    public List<List<Integer>>  calculateRSIValues(Candlestick[] candlesticks, int n) {
+    public List<List<Long>>  calculateRSIValues(Candlestick[] candlesticks, int n) {
 
-        List<List<Integer>> res = new ArrayList<>();
+        List<List<Long>> res = new ArrayList<>();
         double ut1 = 0;
         double dt1 = 0;
         for (int i = 0; i < candlesticks.length; i++) {
             if (i < (n)) {
                 continue;
             }
-            List<Integer> t = new ArrayList<>();
+            List<Long> t = new ArrayList<>();
 
             ut1 = calcSmmaUp(candlesticks, n, i, ut1);
             dt1 = calcSmmaDown(candlesticks, n, i, dt1);
             t.add(candlesticks[i].getOpenTime());
-            t.add((int) (100.0 - 100.0 / (1.0 + (ut1/dt1))));
+            t.add((long) (100.0 - 100.0 / (1.0 + (ut1/dt1))));
             res.add(t);
         }
 

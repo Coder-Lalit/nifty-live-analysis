@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class Candlestick {
-    private Integer openTime;
+    private Long openTime;
     private Float open;
     private Float close;
 }
